@@ -1,0 +1,75 @@
+﻿<Window x:Class="RaceResultConverter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:RaceResultConverter"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="150" Width="400"
+        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}">
+
+    <Window.Resources>
+        <ResourceDictionary>
+            <local:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
+            <local:BooleanToColorConverter x:Key="BoolToColor"/>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="General.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Window.Resources>
+
+    <Grid Margin="10">
+        <Grid VerticalAlignment="Center">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="60"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Grid.Row="0" Grid.Column="0"
+                       Text="{x:Static local:Resource.ConvertType}"
+                       Style="{StaticResource General.TextBlock}"/>
+            <ToggleButton Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
+                          IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertType.ZRoundToZon}}">
+                <ToggleButton.Style>
+                    <Style  BasedOn="{StaticResource General.ToggleButton}"
+                           TargetType="ToggleButton">
+                        <Style.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter Property="Content" Value="{x:Static local:Resource.tbZonFormat}"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter Property="Content" Value="{x:Static local:Resource.tbZRoundFormat}"/>
+                            </Trigger>
+                        </Style.Triggers>
+                    </Style>
+                </ToggleButton.Style>
+            </ToggleButton>
+
+            <TextBlock Grid.Row="1" Grid.Column="0"
+                       Text="{x:Static local:Resource.lbSelectFile}"
+                       Style="{StaticResource General.TextBlock}"/>
+            <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource General.TextBox}"
+                     Text="{Binding SelectedFilePath}"
+                     IsReadOnly="True"/>
+
+            <Button Grid.Row="1" Grid.Column="2" Content="{x:Static local:Resource.btnSelectFile}"
+                    Command="{Binding Path=SelectFileCommand }"
+                    Style="{StaticResource General.Button}"/>
+
+            <Button Grid.Row="2" Grid.Column="2" Content="{x:Static local:Resource.btnConvert}"
+                    Command="{Binding Path=ConvertCommand }"
+                    Style="{StaticResource General.Button}"/>
+
+            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ConvertMessage}"
+                       Background="{Binding Path=ConvertResult, Converter={StaticResource BoolToColor}}" />
+        </Grid>
+
+    </Grid>
+</Window>
