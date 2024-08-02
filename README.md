@@ -1,4 +1,6 @@
 # Introduction 
+This is a small tool to convert racing results between different RC timing systems.
+
 The purpose that I create this tool originally is to use the race result board video generate tool `TimeLap` which Mr. Zon created.
 
 The `TimeLap` only support the data from `ICTagLapCounter` which also created by Mr. Zon, but normally I use ZRound as the race timing system. 
