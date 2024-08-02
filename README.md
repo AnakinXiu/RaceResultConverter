@@ -1,5 +1,11 @@
 # Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+The purpose that I create this tool originally is to use the race result board video generate tool `TimeLap` which Mr. Zon created.
+
+The `TimeLap` only support the data from `ICTagLapCounter` which also created by Mr. Zon, but normally I use ZRound as the race timing system. 
+
+To have my racing data export as video, I create this to to convert ZRound racing data to Mr. Zon's format.
+
+Maybe in the future I'll create my own version to generate video directly from `ZRound` and `TrackGenius`.
 
 # Getting Started
 TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
