@@ -5,8 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RaceResultConverter"
         mc:Ignorable="d"
-        Title="MainWindow" Height="150" Width="400"
-        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}">
+        Title="MainWindow"
+        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
+        Width="480" Height="180"
+        WindowStyle="ToolWindow"
+        ResizeMode="NoResize">
 
     <Window.Resources>
         <ResourceDictionary>

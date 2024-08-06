@@ -31,8 +31,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         set
         {
             _convertType = value;
-            _openFileDialog.Filter =
-                _convertType == ConvertType.ZRoundToZon ? "ZRound Race File|*.rcf" : "JSON File|*.json";
+            _openFileDialog.Filter = GetFileFilterString();
             OnPropertyChanged(nameof(ConvertType));
         }
     }
@@ -58,19 +57,19 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    private bool _canConvert;
+    private bool _sourceFileSelected;
     private bool _convertResult;
     private string _convertMessage = string.Empty;
     private string _selectedFilePath = string.Empty;
     private ConvertType _convertType;
 
-    private bool CanConvert
+    private bool SourceFileSelected
     {
-        get => _canConvert;
+        get => _sourceFileSelected;
         set
         {
-            _canConvert = value;
-            OnPropertyChanged(nameof(CanConvert));
+            _sourceFileSelected = value;
+            OnPropertyChanged(nameof(SourceFileSelected));
             ConvertCommand.RaiseCanExecuteChanged();
         }
     }
@@ -79,16 +78,21 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         _openFileDialog = new OpenFileDialog
         {
-            Filter = "JSON File|*.json"
+            Filter = GetFileFilterString()
         };
 
-        ConvertCommand = new RelayCommand(Convert, () => _canConvert);
+        ConvertCommand = new RelayCommand(Convert, () => _sourceFileSelected && _convertType == ConvertType.ZRoundToZon);
         SelectFileCommand = new RelayCommand(SelectFile);
+    }
+
+    private string GetFileFilterString()
+    {
+        return _convertType == ConvertType.ZRoundToZon ? "ZRound Race File|*.rcf" : "JSON File|*.json";
     }
 
     private void SelectFile()
     {
-        CanConvert = _openFileDialog.ShowDialog() ?? false;
+        SourceFileSelected = _openFileDialog.ShowDialog() ?? false;
         SelectedFilePath = _openFileDialog.FileName;
     }
 
