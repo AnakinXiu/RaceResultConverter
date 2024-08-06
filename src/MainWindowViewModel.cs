@@ -81,9 +81,11 @@ public class MainWindowViewModel : INotifyPropertyChanged
             Filter = GetFileFilterString()
         };
 
-        ConvertCommand = new RelayCommand(Convert, () => _sourceFileSelected && _convertType == ConvertType.ZRoundToZon);
+        ConvertCommand = new RelayCommand(Convert, CanConvert);
         SelectFileCommand = new RelayCommand(SelectFile);
     }
+
+    private bool CanConvert() => _sourceFileSelected && _convertType == ConvertType.ZRoundToZon;    //Currently, only support convert ZRound result to Zon's.
 
     private string GetFileFilterString()
     {
