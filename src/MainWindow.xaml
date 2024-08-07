@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RaceResultConverter"
         mc:Ignorable="d"
-        Title="MainWindow"
+        Title="Race Result Converter"
         d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
         Width="480" Height="180"
-        WindowStyle="ToolWindow"
+        WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize">
 
     <Window.Resources>
