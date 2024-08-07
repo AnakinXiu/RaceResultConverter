@@ -10,7 +10,12 @@ namespace RaceResultConverter;
 
 public class MainWindowViewModel : INotifyPropertyChanged
 {
+    private bool _convertResult;
+    private string _convertMessage = string.Empty;
+    private string _selectedFilePath = string.Empty;
+    private ConvertType _convertType;
     private readonly OpenFileDialog _openFileDialog;
+
     public RelayCommand ConvertCommand { get; set; }
 
     public RelayCommand SelectFileCommand { get; set; }
@@ -22,6 +27,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
         {
             _selectedFilePath = value;
             OnPropertyChanged(nameof(SelectedFilePath));
+            ConvertCommand.RaiseCanExecuteChanged();
         }
     }
 
@@ -32,6 +38,8 @@ public class MainWindowViewModel : INotifyPropertyChanged
         {
             _convertType = value;
             _openFileDialog.Filter = GetFileFilterString();
+            SelectedFilePath = string.Empty;
+
             OnPropertyChanged(nameof(ConvertType));
         }
     }
@@ -57,23 +65,8 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
-    private bool _sourceFileSelected;
-    private bool _convertResult;
-    private string _convertMessage = string.Empty;
-    private string _selectedFilePath = string.Empty;
-    private ConvertType _convertType;
-
-    private bool SourceFileSelected
-    {
-        get => _sourceFileSelected;
-        set
-        {
-            _sourceFileSelected = value;
-            OnPropertyChanged(nameof(SourceFileSelected));
-            ConvertCommand.RaiseCanExecuteChanged();
-        }
-    }
-
+    private bool SourceFileSelected => !string.IsNullOrEmpty(SelectedFilePath) && File.Exists(SelectedFilePath);
+    
     public MainWindowViewModel()
     {
         _openFileDialog = new OpenFileDialog
@@ -85,17 +78,17 @@ public class MainWindowViewModel : INotifyPropertyChanged
         SelectFileCommand = new RelayCommand(SelectFile);
     }
 
-    private bool CanConvert() => _sourceFileSelected && _convertType == ConvertType.ZRoundToZon;    //Currently, only support convert ZRound result to Zon's.
+    private bool CanConvert() => SourceFileSelected && ConvertType == ConvertType.ZRoundToZon;    //Currently, only support convert ZRound result to Zon's.
 
     private string GetFileFilterString()
     {
-        return _convertType == ConvertType.ZRoundToZon ? "ZRound Race File|*.rcf" : "JSON File|*.json";
+        return ConvertType == ConvertType.ZRoundToZon ? "ZRound Race File|*.rcf" : "JSON File|*.json";
     }
 
     private void SelectFile()
     {
-        SourceFileSelected = _openFileDialog.ShowDialog() ?? false;
-        SelectedFilePath = _openFileDialog.FileName;
+        if (_openFileDialog.ShowDialog() ?? false)
+            SelectedFilePath = _openFileDialog.FileName;
     }
 
     private static IRaceResult Convert(ConvertType convertType, string jsonFile)
