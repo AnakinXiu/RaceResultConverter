@@ -3,11 +3,6 @@ using Newtonsoft.Json;
 
 namespace RaceResultConverter;
 
-public interface IResultConverter<TFrom, TTo> where TFrom : IRaceResult where TTo : IRaceResult
-{
-    TTo ConvertToTarget(string jsonFilePath);
-}
-
 public class ResultConverter<TFrom, TTo> : IResultConverter<TFrom, TTo> where TFrom : IRaceResult where TTo : IRaceResult
 {
     public ResultConverter(Func<TFrom, TTo> convert) 
