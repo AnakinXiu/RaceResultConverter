@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Globalization;
+﻿using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
 using RaceResultConverter.Zon;
@@ -21,6 +20,10 @@ public class ZRoundResultConverter : IResultConverter<ZRoundResult, ZonResult>
     {
         var rcfFile = _rcfFileParser.ParseRaceResult(rcfFilePath);
         var jsonFilePath = Path.Combine(Path.GetDirectoryName(rcfFilePath), $"{rcfFile.Run}.json");
+
+
+        if (!File.Exists(jsonFilePath))
+            return null;
 
         var zonResult =  _resultConverter.ConvertToTarget(jsonFilePath, rcfFile);
 

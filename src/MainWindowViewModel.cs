@@ -113,6 +113,9 @@ public class MainWindowViewModel : INotifyPropertyChanged
     {
         try
         {
+            if(result == null)
+                return false;
+
             var s = JsonConvert.SerializeObject(result);
             using var file = new FileStream(Path.Combine(outputPath, "Result.json"), FileMode.OpenOrCreate);
             file.SetLength(0);
