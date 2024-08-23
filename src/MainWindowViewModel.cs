@@ -66,7 +66,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
     }
 
     private bool SourceFileSelected => !string.IsNullOrEmpty(SelectedFilePath) && File.Exists(SelectedFilePath);
-    
+
     public MainWindowViewModel()
     {
         _openFileDialog = new OpenFileDialog
@@ -78,20 +78,22 @@ public class MainWindowViewModel : INotifyPropertyChanged
         SelectFileCommand = new RelayCommand(SelectFile);
     }
 
-    private bool CanConvert() => SourceFileSelected && ConvertType == ConvertType.ZRoundToZon;    //Currently, only support convert ZRound result to Zon's.
-
     private string GetFileFilterString()
     {
         return ConvertType == ConvertType.ZRoundToZon ? "ZRound Race File|*.rcf" : "JSON File|*.json";
     }
 
-    private void SelectFile()
+    private bool CanConvert() => SourceFileSelected && ConvertType == ConvertType.ZRoundToZon;    //Currently, only support convert ZRound result to Zon's.
+
+    private void Convert()
     {
-        if (_openFileDialog.ShowDialog() ?? false)
-            SelectedFilePath = _openFileDialog.FileName;
+        var fullPath = Path.GetDirectoryName(_openFileDialog.FileName);
+        var result = InnerConvert(ConvertType, _openFileDialog.FileName);
+
+        ConvertMessage = SaveJson(result, fullPath) ? "Success" : "Failed";
     }
 
-    private static IRaceResult Convert(ConvertType convertType, string jsonFile)
+    private static IRaceResult InnerConvert(ConvertType convertType, string jsonFile)
     {
         return convertType switch
         {
@@ -101,12 +103,10 @@ public class MainWindowViewModel : INotifyPropertyChanged
         };
     }
 
-    private void Convert()
+    private void SelectFile()
     {
-        var fullPath = Path.GetDirectoryName(_openFileDialog.FileName);
-        var result = Convert(ConvertType, _openFileDialog.FileName);
-
-        ConvertMessage = SaveJson(result, fullPath) ? "Success" : "Failed";
+        if (_openFileDialog.ShowDialog() ?? false)
+            SelectedFilePath = _openFileDialog.FileName;
     }
 
     private static bool SaveJson(IRaceResult result, string outputPath)
