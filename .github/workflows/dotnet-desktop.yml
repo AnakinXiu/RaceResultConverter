@@ -78,7 +78,7 @@ jobs:
       uses: microsoft/setup-msbuild@v2
 
     - name: Build the project
-      run: dotnet build src\RaceResultConverter.sln --configuration Release --no-restore
+      run: dotnet build ..\src\RaceResultConverter.sln --configuration Release --no-restore
 
     - name: Publish the project
       run: dotnet publish --configuration Release --no-build --output ./publish
