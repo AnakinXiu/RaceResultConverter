@@ -87,10 +87,28 @@ public class MainWindowViewModel : INotifyPropertyChanged
 
     private void Convert()
     {
-        var fullPath = Path.GetDirectoryName(_openFileDialog.FileName);
         var result = InnerConvert(ConvertType, _openFileDialog.FileName);
 
-        ConvertMessage = SaveJson(result, fullPath) ? "Success" : "Failed";
+        var saveFileDialog = new SaveFileDialog
+        {
+            AddExtension = true,
+            CreatePrompt = true,
+            FileName = "Result",
+            DefaultExt = ".json",
+            Filter = "JSON File|*.json",
+            ValidateNames = true
+        };
+
+        if (saveFileDialog.ShowDialog() ?? false)
+        {
+            ConvertResult = SaveJson(result, saveFileDialog.FileName);
+            ConvertMessage = ConvertResult ? "Success" : "Failed";
+
+            return;
+        }
+
+        ConvertMessage = "Cancelled";
+        ConvertResult = false;
     }
 
     private static IRaceResult InnerConvert(ConvertType convertType, string jsonFile)
@@ -117,7 +135,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
                 return false;
 
             var s = JsonConvert.SerializeObject(result);
-            using var file = new FileStream(Path.Combine(outputPath, "Result.json"), FileMode.OpenOrCreate);
+            using var file = new FileStream(outputPath, FileMode.OpenOrCreate);
             file.SetLength(0);
             var bytes = Encoding.UTF8.GetBytes(s);
             file.Write(bytes, 0, bytes.Length);
