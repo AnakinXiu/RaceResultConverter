@@ -55,12 +55,6 @@ jobs:
     runs-on: windows-latest  # For a list of available runner types, refer to
                              # https://help.github.com/en/actions/reference/workflow-syntax-for-github-actions#jobsjob_idruns-on
 
-    env:
-      Solution_Name: RaceResultConverter.sln                    # Replace with your solution name, i.e. MyWpfApp.sln.
-      # Test_Project_Path: your-test-project-path               # Replace with the path to your test project, i.e. MyWpfApp.Tests\MyWpfApp.Tests.csproj.
-      # Wap_Project_Directory: src                                # Replace with the Wap project directory relative to the solution, i.e. MyWpfApp.Package.
-      # Wap_Project_Path: src\                                    # Replace with the path to your Wap project, i.e. MyWpf.App.Package\MyWpfApp.Package.wapproj.
-
     steps:
     - name: Checkout
       uses: actions/checkout@v4
@@ -77,8 +71,11 @@ jobs:
     - name: Setup MSBuild.exe
       uses: microsoft/setup-msbuild@v2
 
+    - name: Restore dependencies
+      run: dotnet restore src\RaceResultConverter.sln
+
     - name: Build the project
-      run: dotnet build ..\src\RaceResultConverter.sln --configuration Release --no-restore
+      run: dotnet build src\RaceResultConverter.sln --configuration Release --no-restore
 
     - name: Publish the project
       run: dotnet publish --configuration Release --no-build --output ./publish
