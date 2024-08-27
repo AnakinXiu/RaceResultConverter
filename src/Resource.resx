@@ -135,4 +135,13 @@
   <data name="tbZRoundFormat" xml:space="preserve">
     <value>Zon's Lap Counter -&gt; ZRound Timer</value>
   </data>
+  <data name="ConvertResult_Succeed" xml:space="preserve">
+      <value>Succeed!</value>
+  </data>
+  <data name="ConvertResult_Failed" xml:space="preserve">
+      <value>Failed!</value>
+  </data>
+  <data name="ConvertResult_Cancelled" xml:space="preserve">
+      <value>Cancelled.</value>
+  </data>
 </root>

@@ -79,6 +79,33 @@ namespace RaceResultConverter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancelled..
+        /// </summary>
+        public static string ConvertResult_Cancelled {
+            get {
+                return ResourceManager.GetString("ConvertResult_Cancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed!.
+        /// </summary>
+        public static string ConvertResult_Failed {
+            get {
+                return ResourceManager.GetString("ConvertResult_Failed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Succeed!.
+        /// </summary>
+        public static string ConvertResult_Succeed {
+            get {
+                return ResourceManager.GetString("ConvertResult_Succeed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Convert type.
         /// </summary>
         public static string ConvertType {

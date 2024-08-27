@@ -32,6 +32,9 @@
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resource.zh-cn.resx">
+      <DependentUpon>Resource.resx</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>
