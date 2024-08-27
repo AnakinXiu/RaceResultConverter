@@ -107,7 +107,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
             return;
         }
 
-        ConvertMessage = "Cancelled.";
+        ConvertMessage = Resource.ConvertResult_Cancelled;
         ConvertResult = false;
     }
 
