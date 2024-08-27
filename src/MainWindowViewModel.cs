@@ -102,12 +102,12 @@ public class MainWindowViewModel : INotifyPropertyChanged
         if (saveFileDialog.ShowDialog() ?? false)
         {
             ConvertResult = SaveJson(result, saveFileDialog.FileName);
-            ConvertMessage = ConvertResult ? "Success" : "Failed";
+            ConvertMessage = ConvertResult ? "Succeed!" : "Failed!";
 
             return;
         }
 
-        ConvertMessage = "Cancelled";
+        ConvertMessage = "Cancelled.";
         ConvertResult = false;
     }
 

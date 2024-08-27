@@ -14,7 +14,6 @@
     <Window.Resources>
         <ResourceDictionary>
             <local:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
-            <local:BooleanToColorConverter x:Key="BoolToColor"/>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="General.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -41,7 +40,7 @@
             <ToggleButton Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
                           IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertType.ZRoundToZon}}">
                 <ToggleButton.Style>
-                    <Style  BasedOn="{StaticResource General.ToggleButton}"
+                    <Style BasedOn="{StaticResource General.ToggleButton}"
                            TargetType="ToggleButton">
                         <Style.Triggers>
                             <Trigger Property="IsChecked" Value="True">
@@ -70,9 +69,37 @@
                     Command="{Binding Path=ConvertCommand }"
                     Style="{StaticResource General.Button}"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ConvertMessage}"
-                       Background="{Binding Path=ConvertResult, Converter={StaticResource BoolToColor}}" />
+            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ConvertMessage, UpdateSourceTrigger=PropertyChanged}"
+                       Background="Transparent">
+                <TextBlock.Style>
+                    <Style TargetType="TextBlock">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding Path=ConvertResult}" Value="true">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(TextBlock.Background).(SolidColorBrush.Color)"
+                                                            FillBehavior="Stop"
+                                                            From="LightBlue" To="Transparent" Duration="0:0:3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=ConvertResult}" Value="false">
+                                <DataTrigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <ColorAnimation Storyboard.TargetProperty="(TextBlock.Background).(SolidColorBrush.Color)"
+                                                            FillBehavior="Stop"
+                                                            From="IndianRed" To="Transparent" Duration="0:0:3"/>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </DataTrigger.EnterActions>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </TextBlock.Style>
+            </TextBlock>
         </Grid>
-
     </Grid>
 </Window>
