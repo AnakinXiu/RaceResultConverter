@@ -15,6 +15,7 @@ public class MainWindowViewModel : INotifyPropertyChanged
     private string _selectedFilePath = string.Empty;
     private ConvertType _convertType;
     private readonly OpenFileDialog _openFileDialog;
+    private ConvertSourceType _convertSourceType;
 
     public RelayCommand ConvertCommand { get; set; }
 
@@ -61,11 +62,25 @@ public class MainWindowViewModel : INotifyPropertyChanged
         {
             _convertResult = value;
             OnPropertyChanged(nameof(ConvertResult));
-
         }
     }
 
     private bool SourceFileSelected => !string.IsNullOrEmpty(SelectedFilePath) && File.Exists(SelectedFilePath);
+
+    public ConvertSourceType ConvertSourceType
+    {
+        get => _convertSourceType;
+        set
+        {
+            _convertSourceType = value;
+            OnPropertyChanged(nameof(ConvertSourceType));
+            OnPropertyChanged(nameof(IsSingleConvert));
+            OnPropertyChanged(nameof(IsChampionshipConvert));
+        }
+    }
+
+    public bool IsSingleConvert => ConvertSourceType == ConvertSourceType.Single;
+    public bool IsChampionshipConvert => ConvertSourceType == ConvertSourceType.Championship;
 
     public MainWindowViewModel()
     {

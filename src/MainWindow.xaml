@@ -13,7 +13,11 @@
 
     <Window.Resources>
         <ResourceDictionary>
+            <Style TargetType="RadioButton">
+                <Setter Property="Margin" Value="0 0 10 0" />
+            </Style>
             <local:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="General.xaml"/>
             </ResourceDictionary.MergedDictionaries>
@@ -24,7 +28,7 @@
         <Grid VerticalAlignment="Center">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="25"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
@@ -54,16 +58,55 @@
                 </ToggleButton.Style>
             </ToggleButton>
 
-            <TextBlock Grid.Row="1" Grid.Column="0"
-                       Text="{x:Static local:Resource.lbSelectFile}"
-                       Style="{StaticResource General.TextBlock}"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource General.TextBox}"
-                     Text="{Binding SelectedFilePath}"
-                     IsReadOnly="True"/>
+            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
+                <RadioButton Content="Single Race" 
+                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertSourceType.Single}}"/>
+                <RadioButton Content="Championship" 
+                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertSourceType.Championship}}"/>
+            </StackPanel>
 
-            <Button Grid.Row="1" Grid.Column="2" Content="{x:Static local:Resource.btnSelectFile}"
-                    Command="{Binding Path=SelectFileCommand }"
-                    Style="{StaticResource General.Button}"/>
+            <DockPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" 
+                       Visibility="{Binding IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
+
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Grid.Row="0" Grid.Column="0"
+                               Text="{x:Static local:Resource.lbSelectFile}"
+                               Style="{StaticResource General.TextBlock}"/>
+                    <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource General.TextBox}"
+                         Text="{Binding SelectedFilePath}"
+                         IsReadOnly="True"/>
+
+                    <Button Grid.Row="0" Grid.Column="2" Content="{x:Static local:Resource.btnSelectFile}"
+                        Command="{Binding Path=SelectFileCommand }"
+                        Style="{StaticResource General.Button}"/>
+                </Grid>
+
+            </DockPanel>
+
+            <DockPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2"
+                       Visibility="{Binding IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Grid DockPanel.Dock="Left">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="60"/>
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </DockPanel>
 
             <Button Grid.Row="2" Grid.Column="2" Content="{x:Static local:Resource.btnConvert}"
                     Command="{Binding Path=ConvertCommand }"
