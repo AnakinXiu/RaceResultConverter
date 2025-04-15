@@ -136,12 +136,15 @@
     <value>Zon's Lap Counter -&gt; ZRound Timer</value>
   </data>
   <data name="ConvertResult_Succeed" xml:space="preserve">
-      <value>Succeed!</value>
+    <value>Succeed!</value>
   </data>
   <data name="ConvertResult_Failed" xml:space="preserve">
-      <value>Failed!</value>
+    <value>Failed!</value>
   </data>
   <data name="ConvertResult_Cancelled" xml:space="preserve">
-      <value>Cancelled.</value>
+    <value>Cancelled.</value>
+  </data>
+  <data name="lbSelectSourceType" xml:space="preserve">
+    <value>Data Source Type</value>
   </data>
 </root>

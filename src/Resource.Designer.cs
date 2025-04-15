@@ -124,6 +124,15 @@ namespace RaceResultConverter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Data Source Type.
+        /// </summary>
+        public static string lbSelectSourceType {
+            get {
+                return ResourceManager.GetString("lbSelectSourceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to ZRound Timer -&gt; Zon&apos;s Lap Counter.
         /// </summary>
         public static string tbZonFormat {

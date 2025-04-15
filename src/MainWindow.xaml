@@ -7,14 +7,18 @@
         mc:Ignorable="d"
         Title="Race Result Converter"
         d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
-        Width="480" Height="180"
+        Width="480" Height="500"
         WindowStyle="SingleBorderWindow"
-        ResizeMode="NoResize">
+        ResizeMode="CanResize">
 
     <Window.Resources>
         <ResourceDictionary>
             <Style TargetType="RadioButton">
                 <Setter Property="Margin" Value="0 0 10 0" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="StackPanel">
+                <Setter Property="Margin" Value="5" />
             </Style>
             <local:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
@@ -24,51 +28,47 @@
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid Margin="10">
-        <Grid VerticalAlignment="Center">
+    <Grid >
+        <Grid VerticalAlignment="Stretch" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="25"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="60"/>
-            </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0"
-                       Text="{x:Static local:Resource.ConvertType}"
+            <StackPanel Orientation="Horizontal" IsEnabled="False">
+                <TextBlock Text="{x:Static local:Resource.ConvertType}"
                        Style="{StaticResource General.TextBlock}"/>
-            <ToggleButton Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-                          IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertType.ZRoundToZon}}">
-                <ToggleButton.Style>
-                    <Style BasedOn="{StaticResource General.ToggleButton}"
+                <ToggleButton IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertType.ZRoundToZon}}">
+                    <ToggleButton.Style>
+                        <Style BasedOn="{StaticResource General.ToggleButton}"
                            TargetType="ToggleButton">
-                        <Style.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Content" Value="{x:Static local:Resource.tbZonFormat}"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="False">
-                                <Setter Property="Content" Value="{x:Static local:Resource.tbZRoundFormat}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ToggleButton.Style>
-            </ToggleButton>
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Content" Value="{x:Static local:Resource.tbZonFormat}"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="Content" Value="{x:Static local:Resource.tbZRoundFormat}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+            </StackPanel>
 
-            <StackPanel Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" Orientation="Horizontal" VerticalAlignment="Center">
+            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="{x:Static local:Resource.lbSelectSourceType}"
+                           Style="{StaticResource General.TextBlock}"/>
                 <RadioButton Content="Single Race" 
                              IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertSourceType.Single}}"/>
                 <RadioButton Content="Championship" 
                              IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertSourceType.Championship}}"/>
             </StackPanel>
 
-            <DockPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2" 
-                       Visibility="{Binding IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
-
-                <Grid>
+            <StackPanel Grid.Row="2" >
+                <Grid Visibility="{Binding IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -83,19 +83,15 @@
                                Text="{x:Static local:Resource.lbSelectFile}"
                                Style="{StaticResource General.TextBlock}"/>
                     <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource General.TextBox}"
-                         Text="{Binding SelectedFilePath}"
-                         IsReadOnly="True"/>
+                             Text="{Binding SelectedFilePath}"
+                             IsReadOnly="True"/>
 
                     <Button Grid.Row="0" Grid.Column="2" Content="{x:Static local:Resource.btnSelectFile}"
-                        Command="{Binding Path=SelectFileCommand }"
-                        Style="{StaticResource General.Button}"/>
+                            Command="{Binding Path=SelectFileCommand }"
+                            Style="{StaticResource General.Button}"/>
                 </Grid>
 
-            </DockPanel>
-
-            <DockPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2"
-                       Visibility="{Binding IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
-                <Grid DockPanel.Dock="Left">
+                <Grid Visibility="{Binding IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
@@ -106,14 +102,14 @@
                         <ColumnDefinition Width="60"/>
                     </Grid.ColumnDefinitions>
                 </Grid>
-            </DockPanel>
+            </StackPanel>
 
-            <Button Grid.Row="2" Grid.Column="2" Content="{x:Static local:Resource.btnConvert}"
-                    Command="{Binding Path=ConvertCommand }"
-                    Style="{StaticResource General.Button}"/>
+            <Button Grid.Row="3" Content="{x:Static local:Resource.btnConvert}"
+                Command="{Binding Path=ConvertCommand }"
+                Style="{StaticResource General.Button}"/>
 
-            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ConvertMessage, UpdateSourceTrigger=PropertyChanged}"
-                       Background="Transparent">
+            <TextBlock Grid.Row="4" Text="{Binding ConvertMessage, UpdateSourceTrigger=PropertyChanged}"
+                   Background="Transparent">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>
