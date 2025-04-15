@@ -63,6 +63,9 @@ public class ZRoundToZonResultConverter
         zonResult.Laps = rcfFile.Cars.Select(car => new Zon.Laps { Name = car.Name, Key = car.SenorNumber })
             .ToArray();
 
+        if (!MergeRacerId(zRoundResult.Grid, rcfFile.Cars))
+            return null;
+
         var laps = rcfFile.Cars.Select(car => new CarLaps(car, zRoundResult.Classification.First(classification => classification.RacerId == car.Id))).ToList();
 
         zonResult.EntryLaps = laps.ToDictionary(
@@ -85,6 +88,24 @@ public class ZRoundToZonResultConverter
         }
 
         return zonResult;
+    }
+
+    private static bool MergeRacerId(int[] carGrid, ICollection<Car> cars)
+    {
+        // This is a workaround for the RacerID issue, currently I'm not sure the relationship between
+        // the classification in Json file and the car sector in rcf file.
+
+        if (carGrid.Length != cars.Count)
+            return false;
+
+        var i = 0;
+        foreach (var car in cars)
+        {
+            car.Id= carGrid[i];
+            i++;
+        }
+
+        return true;
     }
 
     public virtual ZRoundResult GetZRoundResult(string jsonFilePath)
