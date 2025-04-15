@@ -19,6 +19,8 @@ public class ZonResult : IRaceResult
 
     [JsonProperty("EntryLaps")]
     public Dictionary<string, Lap[]> EntryLaps { get; set; }
+
+    public string Name => RaceDataProp.Name;
 }
 
 [JsonObject(MemberSerialization.OptIn)]

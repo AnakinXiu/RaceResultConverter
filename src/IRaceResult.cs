@@ -2,4 +2,5 @@
 
 public interface IRaceResult
 {
+    string Name { get; }
 }
