@@ -7,9 +7,10 @@
         mc:Ignorable="d"
         Title="Race Result Converter"
         d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
-        Width="480" Height="500"
+        Width="480" Height="200"
         WindowStyle="SingleBorderWindow"
-        ResizeMode="CanResize">
+        ResizeMode="NoResize"
+        SizeToContent="Height">
 
     <Window.Resources>
         <ResourceDictionary>
@@ -68,45 +69,11 @@
             </StackPanel>
 
             <StackPanel Grid.Row="2" >
-                <Grid Visibility="{Binding IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="60"/>
-                    </Grid.ColumnDefinitions>
-
-                    <TextBlock Grid.Row="0" Grid.Column="0"
-                               Text="{x:Static local:Resource.lbSelectFile}"
-                               Style="{StaticResource General.TextBlock}"/>
-                    <TextBox Grid.Row="0" Grid.Column="1" Style="{StaticResource General.TextBox}"
-                             Text="{Binding SelectedFilePath}"
-                             IsReadOnly="True"/>
-
-                    <Button Grid.Row="0" Grid.Column="2" Content="{x:Static local:Resource.btnSelectFile}"
-                            Command="{Binding Path=SelectFileCommand }"
-                            Style="{StaticResource General.Button}"/>
-                </Grid>
-
-                <Grid Visibility="{Binding IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}}">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto"/>
-                        <RowDefinition Height="Auto"/>
-                    </Grid.RowDefinitions>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="60"/>
-                    </Grid.ColumnDefinitions>
-                </Grid>
+                <local:SingleRaceConvertPage Visibility="{Binding DataContext.IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                             DataContext="{Binding Path=SingleRaceConvertViewModel}"/>
+                <local:ChampionshipResultConvertPage Visibility="{Binding DataContext.IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                                     DataContext="{Binding Path=ChampionshipResultConvertViewModel}"/>
             </StackPanel>
-
-            <Button Grid.Row="3" Content="{x:Static local:Resource.btnConvert}"
-                Command="{Binding Path=ConvertCommand }"
-                Style="{StaticResource General.Button}"/>
 
             <TextBlock Grid.Row="4" Text="{Binding ConvertMessage, UpdateSourceTrigger=PropertyChanged}"
                    Background="Transparent">
