@@ -38,4 +38,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Conversion\" />
+    <Folder Include="NewFolder\" />
+  </ItemGroup>
+
 </Project>
