@@ -1,17 +1,15 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RaceResultConverter.DTO;
-using RaceResultConverter.DTO.Zon;
-using RaceResultConverter.DTO.ZRound;
 using RaceResultConverter.Enum;
 
 namespace RaceResultConverter.ViewModels;
 
 public class MainWindowViewModel : INotifyPropertyChanged
 {
-
     private ConvertType _convertType;
     private ConvertSourceType _convertSourceType;
+    private bool _convertResult;
+    private string _convertMessage = string.Empty;
 
     public ConvertType ConvertType
     {
@@ -35,21 +33,44 @@ public class MainWindowViewModel : INotifyPropertyChanged
         }
     }
 
+    public string ConvertMessage
+    {
+        get => _convertMessage;
+        set
+        {
+            _convertMessage = value;
+            OnPropertyChanged(nameof(ConvertMessage));
+        }
+    }
+
+    public bool ConvertResult
+    {
+        get => _convertResult;
+        set
+        {
+            _convertResult = value;
+            OnPropertyChanged(nameof(ConvertResult));
+        }
+    }
+
     public bool IsSingleConvert => ConvertSourceType == ConvertSourceType.Single;
+
     public bool IsChampionshipConvert => ConvertSourceType == ConvertSourceType.Championship;
 
     public SingleRaceConvertViewModel SingleRaceConvertViewModel { get; }
+
     public ChampionshipResultConvertViewModel ChampionshipResultConvertViewModel{ get; }
 
     public MainWindowViewModel()
     {
-        SingleRaceConvertViewModel = new SingleRaceConvertViewModel(() => ConvertType);
-        ChampionshipResultConvertViewModel = new ChampionshipResultConvertViewModel();
+        SingleRaceConvertViewModel = new SingleRaceConvertViewModel(() => ConvertType, SetConvertResult);
+        ChampionshipResultConvertViewModel = new ChampionshipResultConvertViewModel(() => ConvertType, SetConvertResult);
     }
 
-    private static ZRoundResult ConvertZonToZRound(ZonResult arg)
+    private void SetConvertResult(bool result, string message)
     {
-        return new ZRoundResult();
+        ConvertMessage = message;
+        ConvertResult = result;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;

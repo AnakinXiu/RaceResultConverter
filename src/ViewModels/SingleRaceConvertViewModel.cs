@@ -2,7 +2,6 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using RaceResultConverter.Conversion;
-using RaceResultConverter.DTO;
 using RaceResultConverter.DTO.Zon;
 using RaceResultConverter.DTO.ZRound;
 using RaceResultConverter.Enum;
@@ -16,8 +15,7 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
     private string _selectedFilePath = string.Empty;
     private readonly OpenFileDialog _openFileDialog;
     private readonly Func<ConvertType> _getConvertType;
-    private bool _convertResult;
-    private string _convertMessage = string.Empty;
+    private readonly Action<bool, string> _setConvertResult;
 
     public RelayCommand ConvertCommand { get; set; }
 
@@ -27,7 +25,7 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
 
     private bool SourceFileSelected => !string.IsNullOrEmpty(SelectedFilePath) && File.Exists(SelectedFilePath);
 
-    public ConvertType ConvertType => _getConvertType();
+    private ConvertType ConvertType => _getConvertType();
 
     public string SelectedFilePath
     {
@@ -40,29 +38,10 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
         }
     }
 
-    public string ConvertMessage
-    {
-        get => _convertMessage;
-        set
-        {
-            _convertMessage = value;
-            OnPropertyChanged(nameof(ConvertMessage));
-        }
-    }
-
-    public bool ConvertResult
-    {
-        get => _convertResult;
-        set
-        {
-            _convertResult = value;
-            OnPropertyChanged(nameof(ConvertResult));
-        }
-    }
-
-    public SingleRaceConvertViewModel(Func<ConvertType> getConvertType)
+    public SingleRaceConvertViewModel(Func<ConvertType> getConvertType, Action<bool, string> setConvertResult)
     {
         _getConvertType = getConvertType;
+        _setConvertResult = setConvertResult;
         _openFileDialog = new OpenFileDialog
         {
             Filter = GetFileFilterString()
@@ -113,14 +92,13 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
 
         if (saveFileDialog.ShowDialog() ?? false)
         {
-            ConvertResult = JsonUtil.SaveAsJson(result, saveFileDialog.FileName);
-            ConvertMessage = ConvertResult ? Resource.ConvertResult_Succeed : Resource.ConvertResult_Failed;
+            var convertResult = JsonUtil.SaveAsJson(result, saveFileDialog.FileName);
+            _setConvertResult(convertResult, convertResult ? Resource.ConvertResult_Succeed : Resource.ConvertResult_Failed);
 
             return;
         }
 
-        ConvertMessage = Resource.ConvertResult_Cancelled;
-        ConvertResult = false;
+        _setConvertResult(false, Resource.ConvertResult_Cancelled);
     }
 
 

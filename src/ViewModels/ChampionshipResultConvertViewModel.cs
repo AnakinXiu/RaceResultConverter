@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using RaceResultConverter.Enum;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
@@ -8,6 +9,8 @@ namespace RaceResultConverter.ViewModels;
 
 public class ChampionshipResultConvertViewModel : INotifyPropertyChanged
 {
+    private readonly Func<ConvertType> _getConvertType;
+    private readonly Action<bool, string> _setConvertResult;
     private string _championshipFolderPath = string.Empty;
 
     public string ChampionshipFolderPath
@@ -27,8 +30,10 @@ public class ChampionshipResultConvertViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    public ChampionshipResultConvertViewModel()
+    public ChampionshipResultConvertViewModel(Func<ConvertType> getConvertType, Action<bool, string> setConvertResult)
     {
+        _getConvertType = getConvertType;
+        _setConvertResult = setConvertResult;
         SelectFolderCommand = new RelayCommand(SelectFolder);
         ConvertCommand = new RelayCommand(Convert);
     }
