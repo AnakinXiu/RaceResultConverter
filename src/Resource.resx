@@ -147,4 +147,7 @@
   <data name="lbSelectSourceType" xml:space="preserve">
     <value>Data Source Type</value>
   </data>
+  <data name="btnSelectFolder" xml:space="preserve">
+    <value>Select Folder</value>
+  </data>
 </root>

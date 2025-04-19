@@ -1,5 +1,4 @@
-﻿using Microsoft.Win32;
-using RaceResultConverter.Zon;
+﻿using RaceResultConverter.Zon;
 using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;

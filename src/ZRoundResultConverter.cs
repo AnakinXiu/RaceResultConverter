@@ -25,7 +25,7 @@ public class ZRoundResultConverter : IResultConverter<ZRoundResult, ZonResult>
         if (!File.Exists(jsonFilePath))
             return null;
 
-        var zonResult =  _resultConverter.ConvertToTarget(jsonFilePath, rcfFile);
+        var zonResult = _resultConverter.ConvertToTarget(jsonFilePath, rcfFile);
 
         if (zonResult == null)
             throw new JsonSerializationException();

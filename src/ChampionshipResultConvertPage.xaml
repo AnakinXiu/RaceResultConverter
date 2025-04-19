@@ -34,21 +34,24 @@
         <TextBox Grid.Row="0" Grid.Column="1"
                    Text="{Binding ChampionshipFolderPath}"/>
         <Button Grid.Row="0" Grid.Column="2" 
-                Content="{x:Static local:Resource.btnSelectFile}"
+                Content="{x:Static local:Resource.btnSelectFolder}"
                 Command="{Binding Path=SelectFolderCommand }"
                 Style="{StaticResource General.Button}"/>
 
         <DataGrid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="3"
-                  ItemsSource="{Binding ZRoundRaceResultItems}">
+                  ItemsSource="{Binding ZRoundRaceResultItems}"
+                  AutoGenerateColumns="False"
+                  CanUserAddRows="False"
+                  >
             <DataGrid.ColumnHeaderStyle>
-                <Style TargetType="GridViewColumnHeader">
-                    <Setter Property="HorizontalAlignment" Value="Center"/>
+                <Style TargetType="DataGridColumnHeader">
+                    <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Width="30"/>
+                <DataGridCheckBoxColumn Width="40"/>
                 <DataGridTextColumn Header="rcf File" Width="*"/>
-                <DataGridTextColumn Header="json File" Width="*"/>
+                <DataGridTextColumn Header="json File" Width="*" />
             </DataGrid.Columns>
         </DataGrid>
 
