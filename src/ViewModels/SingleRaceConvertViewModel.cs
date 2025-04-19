@@ -2,8 +2,6 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using RaceResultConverter.Conversion;
-using RaceResultConverter.DTO.Zon;
-using RaceResultConverter.DTO.ZRound;
 using RaceResultConverter.Enum;
 using RaceResultConverter.Utils;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -59,22 +57,7 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
 
     private static IRaceResult InnerConvert(string jsonFile)
     {
-        return new ZRoundResultConverter(ConvertZRoundToZon).ConvertToTarget(jsonFile);
-    }
-
-    private static ZonResult ConvertZRoundToZon(ZRoundResult arg)
-    {
-        return new ZonResult
-        {
-            RaceDataProp = new RaceDataProp
-            {
-                RaceTitle = arg.Name,
-                PrintTitle = arg.Name,
-                Time = arg.Start,
-                RaceRoundid = arg.Start,
-                RaceMode = 1
-            }
-        };
+        return new ZRoundResultConverter().ConvertToTarget(jsonFile);
     }
 
     private void Convert()

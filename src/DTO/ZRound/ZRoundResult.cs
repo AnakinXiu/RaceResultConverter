@@ -22,7 +22,7 @@ public class ZRoundResult : IRaceResult
 
     public float MinLapTime { get; set; }
 
-    public float  TimeToFinish { get; set; }
+    public float TimeToFinish { get; set; }
 
     [JsonProperty("name")] 
     public string Name { get; set; } = string.Empty;

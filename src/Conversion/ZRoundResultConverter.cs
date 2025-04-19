@@ -10,14 +10,8 @@ namespace RaceResultConverter.Conversion;
 
 public class ZRoundResultConverter : IResultConverter<ZRoundResult, ZonResult>
 {
-    private readonly RcfFileParser _rcfFileParser;
-    private readonly ZRoundToZonResultConverter _resultConverter;
-
-    public ZRoundResultConverter(Func<ZRoundResult, ZonResult> convert)
-    {
-        _rcfFileParser = new RcfFileParser();
-        _resultConverter = new ZRoundToZonResultConverter(convert);
-    }
+    private readonly RcfFileParser _rcfFileParser = new();
+    private readonly ZRoundToZonResultConverter _resultConverter = new();
 
     public ZonResult ConvertToTarget(string rcfFilePath)
     {
@@ -39,18 +33,11 @@ public class ZRoundResultConverter : IResultConverter<ZRoundResult, ZonResult>
 
 public class ZRoundToZonResultConverter
 {
-    private readonly Func<ZRoundResult, ZonResult> _convert;
-
-    public ZRoundToZonResultConverter(Func<ZRoundResult, ZonResult> convert)
-    {
-        _convert = convert;
-    }
-
     public ZonResult ConvertToTarget(string jsonFilePath, RcfFile rcfFile)
     {
         var zRoundResult = GetZRoundResult(jsonFilePath);
 
-        var zonResult = _convert(zRoundResult);
+        var zonResult = ConvertZRoundToZon(zRoundResult);
 
         zonResult.RaceDataProp.RaceTime = rcfFile.Duration / 60;
         zonResult.RaceDataProp.Name = rcfFile.Description;
@@ -91,6 +78,21 @@ public class ZRoundToZonResultConverter
         }
 
         return zonResult;
+    }
+
+    private static ZonResult ConvertZRoundToZon(ZRoundResult arg)
+    {
+        return new ZonResult
+        {
+            RaceDataProp = new RaceDataProp
+            {
+                RaceTitle = arg.Name,
+                PrintTitle = arg.Name,
+                Time = arg.Start,
+                RaceRoundid = arg.Start,
+                RaceMode = 1
+            }
+        };
     }
 
     private static bool MergeRacerId(int[] carGrid, ICollection<Car> cars)
