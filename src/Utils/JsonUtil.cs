@@ -2,7 +2,7 @@
 using System.IO;
 using System.Text;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.Utils;
 
 public static class JsonUtil
 {
