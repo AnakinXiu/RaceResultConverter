@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using RaceResultConverter.DTO;
+using RaceResultConverter.DTO.Zon;
+using RaceResultConverter.DTO.ZRound;
 using RaceResultConverter.Enum;
 
 namespace RaceResultConverter.ViewModels;

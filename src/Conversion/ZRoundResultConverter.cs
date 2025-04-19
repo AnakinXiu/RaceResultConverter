@@ -2,6 +2,9 @@
 using System.IO;
 using Newtonsoft.Json;
 using RaceResultConverter.DTO;
+using RaceResultConverter.DTO.Zon;
+using RaceResultConverter.DTO.ZRound;
+using Laps = RaceResultConverter.DTO.ZRound.Laps;
 
 namespace RaceResultConverter.Conversion;
 
@@ -60,7 +63,7 @@ public class ZRoundToZonResultConverter
 
         zonResult.RaceDataProp.Name = zonResult.RaceDataProp.RaceTitle;
 
-        zonResult.Laps = rcfFile.Cars.Select(car => new Zon.Laps { Name = car.Name, Key = car.SenorNumber })
+        zonResult.Laps = rcfFile.Cars.Select(car => new DTO.Zon.Laps { Name = car.Name, Key = car.SenorNumber })
             .ToArray();
 
         if (!MergeRacerId(zRoundResult.Grid, rcfFile.Cars))
