@@ -1,4 +1,4 @@
-﻿namespace RaceResultConverter;
+﻿namespace RaceResultConverter.Conversion;
 
 public interface IResultConverter<TFrom, TTo> where TFrom : IRaceResult where TTo : IRaceResult
 {

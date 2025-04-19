@@ -4,7 +4,7 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.ViewModels;
 
 public class ChampionshipResultConvertViewModel : INotifyPropertyChanged
 {

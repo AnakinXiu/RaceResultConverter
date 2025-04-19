@@ -2,6 +2,7 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using RaceResultConverter.DTO;
 
 namespace RaceResultConverter;
 

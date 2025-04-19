@@ -1,8 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using RaceResultConverter.Zon;
+using RaceResultConverter.DTO;
+using RaceResultConverter.Enum;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.ViewModels;
 
 public class MainWindowViewModel : INotifyPropertyChanged
 {

@@ -4,9 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RaceResultConverter"
+        xmlns:viewModels="clr-namespace:RaceResultConverter.ViewModels"
+        xmlns:converters="clr-namespace:RaceResultConverter.Converters"
+        xmlns:enum="clr-namespace:RaceResultConverter.Enum"
+        xmlns:views="clr-namespace:RaceResultConverter.Views"
         mc:Ignorable="d"
         Title="Race Result Converter"
-        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
         Width="480" Height="200"
         WindowStyle="SingleBorderWindow"
         ResizeMode="NoResize"
@@ -21,7 +25,7 @@
             <Style TargetType="StackPanel">
                 <Setter Property="Margin" Value="5" />
             </Style>
-            <local:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
+            <converters:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
             <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="General.xaml"/>
@@ -42,7 +46,7 @@
             <StackPanel Orientation="Horizontal" IsEnabled="False">
                 <TextBlock Text="{x:Static local:Resource.ConvertType}"
                        Style="{StaticResource General.TextBlock}"/>
-                <ToggleButton IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertType.ZRoundToZon}}">
+                <ToggleButton IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static enum:ConvertType.ZRoundToZon}}">
                     <ToggleButton.Style>
                         <Style BasedOn="{StaticResource General.ToggleButton}"
                            TargetType="ToggleButton">
@@ -63,15 +67,15 @@
                 <TextBlock Text="{x:Static local:Resource.lbSelectSourceType}"
                            Style="{StaticResource General.TextBlock}"/>
                 <RadioButton Content="Single Race" 
-                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertSourceType.Single}}"/>
+                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static enum:ConvertSourceType.Single}}"/>
                 <RadioButton Content="Championship" 
-                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertSourceType.Championship}}"/>
+                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static enum:ConvertSourceType.Championship}}"/>
             </StackPanel>
 
             <StackPanel Grid.Row="2" >
-                <local:SingleRaceConvertPage Visibility="{Binding DataContext.IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                <views:SingleRaceConvertPage Visibility="{Binding DataContext.IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                              DataContext="{Binding Path=SingleRaceConvertViewModel}"/>
-                <local:ChampionshipResultConvertPage Visibility="{Binding DataContext.IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                <views:ChampionshipResultConvertPage Visibility="{Binding DataContext.IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
                                                      DataContext="{Binding Path=ChampionshipResultConvertViewModel}"/>
             </StackPanel>
 

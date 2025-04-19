@@ -1,11 +1,13 @@
-﻿using RaceResultConverter.Zon;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
+using RaceResultConverter.Conversion;
+using RaceResultConverter.DTO;
+using RaceResultConverter.Enum;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
 using SaveFileDialog = Microsoft.Win32.SaveFileDialog;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.ViewModels;
 
 public class SingleRaceConvertViewModel : INotifyPropertyChanged
 {

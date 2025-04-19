@@ -1,9 +1,9 @@
 ﻿using System.Globalization;
 using System.IO;
 using Newtonsoft.Json;
-using RaceResultConverter.Zon;
+using RaceResultConverter.DTO;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.Conversion;
 
 public class ZRoundResultConverter : IResultConverter<ZRoundResult, ZonResult>
 {
@@ -76,7 +76,7 @@ public class ZRoundToZonResultConverter
                 Chk = true,
                 LapIndex = lap.Classification.Laps.IndexOf(l) + 1,
                 Hit = l.Position,
-                Time = float.TryParse(l.CurrentLapTime, out var time) ? time : float.NaN,
+                Time = float.TryParse((string?)l.CurrentLapTime, out var time) ? time : float.NaN,
                 Totaltime = ResultTotalMilliseconds(l)
             }).ToArray());
 

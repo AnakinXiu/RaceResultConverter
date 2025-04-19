@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.DTO;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class ZRoundResult : IRaceResult

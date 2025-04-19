@@ -1,4 +1,4 @@
-﻿namespace RaceResultConverter;
+﻿namespace RaceResultConverter.ViewModels;
 
 public class ZRoundRaceResultItem
 {

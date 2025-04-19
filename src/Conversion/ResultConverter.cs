@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.Conversion;
 
 public class ResultConverter<TFrom, TTo> : IResultConverter<TFrom, TTo> where TFrom : IRaceResult where TTo : IRaceResult
 {
