@@ -52,7 +52,7 @@ public class ZRoundResultConverter : IResultConverter<ZRoundResult, ZonResult>
                                      .ToArray();
 
         if (!MergeRacerId(zRoundResult.Grid, zRoundResult.Cars))
-            return null;
+            return zonResult;
 
         var laps = zRoundResult.Cars
                                .Select(car => new CarLaps(car, 

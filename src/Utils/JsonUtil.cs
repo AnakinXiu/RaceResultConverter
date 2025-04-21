@@ -15,7 +15,7 @@ public static class JsonUtil
                 return false;
 
             var s = JsonConvert.SerializeObject(result);
-            using var file = new FileStream(outputPath, FileMode.OpenOrCreate);
+            using var file = new FileStream(outputPath, FileMode.Create);
             file.SetLength(0);
             var bytes = Encoding.UTF8.GetBytes(s);
             file.Write(bytes, 0, bytes.Length);

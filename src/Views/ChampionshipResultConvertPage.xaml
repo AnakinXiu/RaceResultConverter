@@ -44,16 +44,19 @@
                   ItemsSource="{Binding ZRoundRaceResultItems}"
                   AutoGenerateColumns="False"
                   CanUserAddRows="False"
-                  MinHeight="200">
+                  Height="200">
             <DataGrid.ColumnHeaderStyle>
                 <Style TargetType="DataGridColumnHeader">
                     <Setter Property="HorizontalAlignment" Value="Stretch"/>
                 </Style>
             </DataGrid.ColumnHeaderStyle>
             <DataGrid.Columns>
-                <DataGridCheckBoxColumn Width="40"/>
-                <DataGridTextColumn Header="rcf File" Width="*"/>
-                <DataGridTextColumn Header="json File" Width="*" />
+                <DataGridCheckBoxColumn Width="40" 
+                                        Binding="{Binding IsCheck}"/>
+                <DataGridTextColumn Header="rcf File" Width="*"
+                                    Binding="{Binding RcfFile}"/>
+                <DataGridTextColumn Header="json File" Width="*" 
+                                    Binding="{Binding JsonFile}"/>
             </DataGrid.Columns>
         </DataGrid>
 

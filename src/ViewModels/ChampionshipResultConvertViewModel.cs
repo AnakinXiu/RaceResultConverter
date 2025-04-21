@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
+using RaceResultConverter.Conversion;
 
 namespace RaceResultConverter.ViewModels;
 
@@ -36,13 +37,15 @@ public class ChampionshipResultConvertViewModel : INotifyPropertyChanged
         _getConvertType = getConvertType;
         _setConvertResult = setConvertResult;
         SelectFolderCommand = new RelayCommand(SelectFolder);
-        ConvertCommand = new RelayCommand(Convert);
+        ConvertCommand = new RelayCommand(Convert, CanConvert);
     }
 
     private void SelectFolder()
     {
-        var folderBrowserDialog = new FolderBrowserDialog()
-            {
+        ZRoundRaceResultItems.Clear();
+
+        var folderBrowserDialog = new FolderBrowserDialog
+        {
                 ShowNewFolderButton = false
             };
         if( folderBrowserDialog.ShowDialog() != DialogResult.OK) 
@@ -53,14 +56,36 @@ public class ChampionshipResultConvertViewModel : INotifyPropertyChanged
         if(!Directory.Exists(ChampionshipFolderPath))
            return;
 
-        var enumerateFiles = Directory.EnumerateFiles(ChampionshipFolderPath, "*.rcf");
+        var rcfResults = Directory.EnumerateFiles(ChampionshipFolderPath, "*.rcf", SearchOption.AllDirectories)
+                               .Select(RcfFileParser.ParseZRoundResult);
+
+        foreach (var zRoundRaceResultItem in rcfResults.Select(r => new ZRoundRaceResultItem
+                 {
+                     IsCheck = r.IsValid,
+                     JsonFile = r.JsonFile,
+                     RcfFile = r.ZRoundResult.Name,
+                     ParseResult = r
+                 }))
+        {
+            ZRoundRaceResultItems.Add(zRoundRaceResultItem);
+        }
+
+        ConvertCommand.RaiseCanExecuteChanged();
     }
 
     private void Convert()
     {
-        // Implement conversion logic here
-        // Use ChampionshipFolderPath to access the files
+        var converter = new ZRoundResultConverter();
+        var zonResults = ZRoundRaceResultItems.Where(result => result is { IsCheck: true, ParseResult.IsValid: true })
+                                              .Select(result => converter.ConvertToTarget(result.ParseResult.ZRoundResult));
+
+        var convertResult = zonResults.Aggregate(true, 
+            (current, zonResult) => current & JsonUtil.SaveAsJson(zonResult, Path.ChangeExtension(Path.Combine(ChampionshipFolderPath, zonResult.Name), "json")));
+
+        _setConvertResult(convertResult, convertResult ? Resource.ConvertResult_Succeed : Resource.ConvertResult_Failed);
     }
+
+    private bool CanConvert() => ZRoundRaceResultItems?.Any(r => r is { IsCheck: true, ParseResult.IsValid: true }) ?? false;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

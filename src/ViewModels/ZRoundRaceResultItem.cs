@@ -1,4 +1,6 @@
-﻿namespace RaceResultConverter.ViewModels;
+﻿using RaceResultConverter.Conversion;
+
+namespace RaceResultConverter.ViewModels;
 
 public class ZRoundRaceResultItem
 {
@@ -7,4 +9,6 @@ public class ZRoundRaceResultItem
     public string RcfFile { get; set; } = string.Empty;
 
     public string JsonFile { get; set; } = string.Empty;
+
+    public RcfFileParseResult ParseResult { get; set; }
 }

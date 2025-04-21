@@ -32,7 +32,7 @@ public static class RcfFileParser
         zRoundResult.Description = rcfFile.Description;
         zRoundResult.Cars = rcfFile.Cars;
 
-        return RcfFileParseResult.Success(zRoundResult);
+        return RcfFileParseResult.Success(zRoundResult, jsonFilePath);
     }
 
     private static RcfFile ParseRcfFile(string rcfFilePath)
@@ -65,7 +65,7 @@ public static class RcfFileParser
         return rcf;
     }
 
-    public static ZRoundResult ParseJsonFile(string jsonFilePath)
+    private static ZRoundResult ParseJsonFile(string jsonFilePath)
     {
         using var reader = new StreamReader(jsonFilePath);
         var readToEnd = reader.ReadToEnd();
