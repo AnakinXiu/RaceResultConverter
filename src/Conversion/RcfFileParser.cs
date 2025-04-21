@@ -2,21 +2,41 @@
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json;
 using RaceResultConverter.DTO;
+using RaceResultConverter.DTO.ZRound;
 
 namespace RaceResultConverter.Conversion;
 
-public class RcfFileParser
+public static class RcfFileParser
 {
-    public string Extension => ".rcf";
+    private static string Extension => ".rcf";
 
-    public RcfFile ParseRaceResult(string filePath)
+    public static ZRoundResult ParseZRoundResult(string rcfFilePath)
     {
-        if (!File.Exists(filePath) || !IsValidRcfFile(filePath))
+        if (!File.Exists(rcfFilePath) || !IsValidRcfFile(rcfFilePath))
             return null;
 
+        var rcfFile = ParseRcfFile(rcfFilePath);
+        var jsonFilePath = GetJsonFilePath(rcfFilePath, rcfFile);
+
+        if (!File.Exists(jsonFilePath))
+            return null;
+
+        var zRoundResult = ParseJsonFile(jsonFilePath);
+
+        zRoundResult.Duration = rcfFile.Duration;
+        zRoundResult.Description = rcfFile.Description;
+        zRoundResult.Cars = rcfFile.Cars;
+
+        return zRoundResult;
+    }
+
+    private static RcfFile ParseRcfFile(string rcfFilePath)
+    {
         var rcf = new RcfFile();
-        foreach (var line in File.ReadLines(filePath))
+
+        foreach (var line in File.ReadLines(rcfFilePath))
         {
             var keyValue = line.Split(':');
             if (keyValue.Length != 2 || keyValue[0].Equals("cars"))
@@ -42,7 +62,16 @@ public class RcfFileParser
         return rcf;
     }
 
-    private void InitRcfFile(RcfFile rcfFile, string key, string valueStr)
+    public static ZRoundResult ParseJsonFile(string jsonFilePath)
+    {
+        using var reader = new StreamReader(jsonFilePath);
+        var readToEnd = reader.ReadToEnd();
+
+        var result = JsonConvert.DeserializeObject<ZRoundResult>(readToEnd);
+        return result ?? throw new JsonSerializationException(readToEnd);
+    }
+
+    private static void InitRcfFile(RcfFile rcfFile, string key, string valueStr)
     {
         var propertyInfos = typeof(RcfFile).GetProperties(BindingFlags.Instance | BindingFlags.Public);
         foreach (var propertyInfo in propertyInfos)
@@ -62,5 +91,8 @@ public class RcfFileParser
         }
     }
 
-    private bool IsValidRcfFile(string filePath) => Path.GetExtension(filePath).Equals(Extension);
+    private static bool IsValidRcfFile(string filePath) => Path.GetExtension(filePath).Equals(Extension);
+
+    private static string GetJsonFilePath(string rcfFilePath, RcfFile rcfFile) 
+        => Path.Combine(Path.GetDirectoryName(rcfFilePath), $"{rcfFile.Run}.json");
 }

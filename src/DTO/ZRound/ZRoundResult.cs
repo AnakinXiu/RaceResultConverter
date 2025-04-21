@@ -44,6 +44,9 @@ public class ZRoundResult : IRaceResult
 
     [JsonProperty("classification")]
     public Classification[] Classification { get; set; }
+
+    [JsonIgnore]
+    public List<Car> Cars { get; set; } = new();
 }
 
 [JsonObject(MemberSerialization.OptIn)]

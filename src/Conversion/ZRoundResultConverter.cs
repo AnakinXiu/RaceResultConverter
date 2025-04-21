@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.IO;
 using Newtonsoft.Json;
 using RaceResultConverter.DTO;
 using RaceResultConverter.DTO.Zon;
@@ -10,53 +9,55 @@ namespace RaceResultConverter.Conversion;
 
 public class ZRoundResultConverter : IResultConverter<ZRoundResult, ZonResult>
 {
-    private readonly RcfFileParser _rcfFileParser = new();
-    private readonly ZRoundToZonResultConverter _resultConverter = new();
-
-    public ZonResult ConvertToTarget(string rcfFilePath)
+    public ZonResult ConvertToTarget(ZRoundResult rcfFilePath)
     {
-        var rcfFile = _rcfFileParser.ParseRaceResult(rcfFilePath);
-        var jsonFilePath = Path.Combine(Path.GetDirectoryName(rcfFilePath), $"{rcfFile.Run}.json");
-
-
-        if (!File.Exists(jsonFilePath))
-            return null;
-
-        var zonResult = _resultConverter.ConvertToTarget(jsonFilePath, rcfFile);
+        var zonResult = InnerConvert(rcfFilePath);
 
         if (zonResult == null)
             throw new JsonSerializationException();
 
         return zonResult;
     }
-}
 
-public class ZRoundToZonResultConverter
-{
-    public ZonResult ConvertToTarget(string jsonFilePath, RcfFile rcfFile)
+    private static ZonResult InnerConvert(ZRoundResult zRoundResult)
     {
-        var zRoundResult = GetZRoundResult(jsonFilePath);
-
-        var zonResult = ConvertZRoundToZon(zRoundResult);
-
-        zonResult.RaceDataProp.RaceTime = rcfFile.Duration / 60;
-        zonResult.RaceDataProp.Name = rcfFile.Description;
+        var zonResult = new ZonResult
+        {
+            RaceDataProp = new RaceDataProp
+            {
+                RaceTitle = zRoundResult.Name,
+                PrintTitle = zRoundResult.Name,
+                Time = zRoundResult.Start,
+                RaceRoundid = zRoundResult.Start,
+                RaceMode = 1,
+                RaceTime = zRoundResult.Duration / 60,
+                Name = zRoundResult.Description
+            }
+        };
 
         if (string.IsNullOrEmpty(zonResult.RaceDataProp.RaceTitle))
-            zonResult.RaceDataProp.RaceTitle = string.IsNullOrEmpty(rcfFile.Description) ? "Default Race" : rcfFile.Description;
+            zonResult.RaceDataProp.RaceTitle = string.IsNullOrEmpty(zRoundResult.Description)
+                ? "Default Race"
+                : zRoundResult.Description;
 
         if (string.IsNullOrEmpty(zonResult.RaceDataProp.PrintTitle))
-            zonResult.RaceDataProp.PrintTitle = string.IsNullOrEmpty(rcfFile.Description) ? "Default Race" : rcfFile.Description;
+            zonResult.RaceDataProp.PrintTitle = string.IsNullOrEmpty(zRoundResult.Description)
+                ? "Default Race"
+                : zRoundResult.Description;
 
         zonResult.RaceDataProp.Name = zonResult.RaceDataProp.RaceTitle;
 
-        zonResult.Laps = rcfFile.Cars.Select(car => new DTO.Zon.Laps { Name = car.Name, Key = car.SenorNumber })
-            .ToArray();
+        zonResult.Laps = zRoundResult.Cars
+                                     .Select(car => new DTO.Zon.Laps { Name = car.Name, Key = car.SenorNumber })
+                                     .ToArray();
 
-        if (!MergeRacerId(zRoundResult.Grid, rcfFile.Cars))
+        if (!MergeRacerId(zRoundResult.Grid, zRoundResult.Cars))
             return null;
 
-        var laps = rcfFile.Cars.Select(car => new CarLaps(car, zRoundResult.Classification.First(classification => classification.RacerId == car.Id))).ToList();
+        var laps = zRoundResult.Cars
+                               .Select(car => new CarLaps(car, 
+                                   zRoundResult.Classification.First(classification => classification.RacerId == car.Id)))
+                               .ToList();
 
         zonResult.EntryLaps = laps.ToDictionary(
             lap => lap.Car.SenorNumber,
@@ -70,29 +71,15 @@ public class ZRoundToZonResultConverter
                 Totaltime = ResultTotalMilliseconds(l)
             }).ToArray());
 
+        return zonResult;
+
         int ResultTotalMilliseconds(Laps laps1)
         {
             var laps1TotalTime = (laps1.TotalTime.Contains(':') ? laps1.TotalTime : ($"0:{laps1.TotalTime}"));
             return TimeSpan.TryParse($"0:0:{laps1TotalTime}", new CultureInfo("en-US"), out var total)
-                ? (int)total.TotalMilliseconds / 10 : 0;
+                ? (int)total.TotalMilliseconds / 10
+                : 0;
         }
-
-        return zonResult;
-    }
-
-    private static ZonResult ConvertZRoundToZon(ZRoundResult arg)
-    {
-        return new ZonResult
-        {
-            RaceDataProp = new RaceDataProp
-            {
-                RaceTitle = arg.Name,
-                PrintTitle = arg.Name,
-                Time = arg.Start,
-                RaceRoundid = arg.Start,
-                RaceMode = 1
-            }
-        };
     }
 
     private static bool MergeRacerId(int[] carGrid, ICollection<Car> cars)
@@ -106,24 +93,14 @@ public class ZRoundToZonResultConverter
         var i = 0;
         foreach (var car in cars)
         {
-            car.Id= carGrid[i];
+            car.Id = carGrid[i];
             i++;
         }
 
         return true;
     }
 
-    public virtual ZRoundResult GetZRoundResult(string jsonFilePath)
-    {
-        using var reader = new StreamReader(jsonFilePath);
-        var readToEnd = reader.ReadToEnd();
-
-        var result = JsonConvert.DeserializeObject<ZRoundResult>(readToEnd);
-        return result ?? throw new JsonSerializationException(readToEnd);
-    }
-
-
-    private class CarLaps
+    private struct CarLaps
     {
         public CarLaps(Car car, Classification classification)
         {

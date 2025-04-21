@@ -3,6 +3,8 @@ using System.IO;
 using System.Runtime.CompilerServices;
 using RaceResultConverter.Conversion;
 using RaceResultConverter.DTO;
+using RaceResultConverter.DTO.Zon;
+using RaceResultConverter.DTO.ZRound;
 using RaceResultConverter.Enum;
 using RaceResultConverter.Utils;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;
@@ -56,9 +58,14 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
         return ConvertType == ConvertType.ZRoundToZon ? "ZRound Race File|*.rcf" : "JSON File|*.json";
     }
 
-    private static IRaceResult InnerConvert(string jsonFile)
+    private IRaceResult InnerConvert(string jsonFile)
     {
-        return new ZRoundResultConverter().ConvertToTarget(jsonFile);
+        return ConvertType switch
+        {
+            ConvertType.ZRoundToZon => new ZRoundResultConverter().ConvertToTarget(RcfFileParser.ParseZRoundResult(jsonFile)),
+            ConvertType.ZonToZRound => new ResultConverter<ZonResult, ZRoundResult>(zonResult => new ZRoundResult()).ConvertToTarget(null),
+            _ => throw new ArgumentOutOfRangeException()
+        };
     }
 
     private void Convert()
