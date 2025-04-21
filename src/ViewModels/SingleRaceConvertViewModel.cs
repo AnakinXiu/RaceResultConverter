@@ -60,12 +60,23 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
 
     private IRaceResult InnerConvert(string jsonFile)
     {
-        return ConvertType switch
+        IRaceResult result = null;
+        switch (ConvertType)
         {
-            ConvertType.ZRoundToZon => new ZRoundResultConverter().ConvertToTarget(RcfFileParser.ParseZRoundResult(jsonFile)),
-            ConvertType.ZonToZRound => new ResultConverter<ZonResult, ZRoundResult>(zonResult => new ZRoundResult()).ConvertToTarget(null),
-            _ => throw new ArgumentOutOfRangeException()
-        };
+            case ConvertType.ZRoundToZon:
+                var parseResult = RcfFileParser.ParseZRoundResult(jsonFile);
+                result = new ZRoundResultConverter().ConvertToTarget(parseResult.ZRoundResult);
+                break;
+
+            case ConvertType.ZonToZRound:
+                result = new ResultConverter<ZonResult, ZRoundResult>(_ => new ZRoundResult()).ConvertToTarget(null);
+                break;
+
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+
+        return result;
     }
 
     private void Convert()
@@ -92,7 +103,6 @@ public class SingleRaceConvertViewModel : INotifyPropertyChanged
 
         _setConvertResult(false, Resource.ConvertResult_Cancelled);
     }
-
 
     private void SelectFile()
     {

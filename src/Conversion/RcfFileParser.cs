@@ -8,25 +8,6 @@ using RaceResultConverter.DTO.ZRound;
 
 namespace RaceResultConverter.Conversion;
 
-public class RcfFileParseResult
-{
-    public static RcfFileParseResult Failed(string errorMessage)
-        => new RcfFileParseResult { IsValid = false, ErrorMessage = errorMessage };
-
-    public static RcfFileParseResult Success(ZRoundResult result)
-        => new RcfFileParseResult { IsValid = true, ZRoundResult = result };
-
-    private RcfFileParseResult()
-    {
-    }
-
-    public bool IsValid { get; private set; }
-
-    public string ErrorMessage { get; private set; } = string.Empty;
-
-    public ZRoundResult ZRoundResult { get; private set; }
-}
-
 public static class RcfFileParser
 {
     private static string Extension => ".rcf";
