@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using Newtonsoft.Json;
+using RaceResultConverter.DTO;
 
 namespace RaceResultConverter.Conversion;
 

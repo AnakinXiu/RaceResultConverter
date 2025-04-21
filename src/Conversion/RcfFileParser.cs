@@ -4,7 +4,7 @@ using System.Reflection;
 using System.Text;
 using RaceResultConverter.DTO;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.Conversion;
 
 public class RcfFileParser
 {
@@ -48,14 +48,14 @@ public class RcfFileParser
         foreach (var propertyInfo in propertyInfos)
         {
             var attr = propertyInfo.GetCustomAttribute(typeof(DisplayNameAttribute), true);
-            if (attr is not  DisplayNameAttribute displayNameAttr || !displayNameAttr.DisplayName.Equals(key))
+            if (attr is not DisplayNameAttribute displayNameAttr || !displayNameAttr.DisplayName.Equals(key))
                 continue;
-            
+
             object value = propertyInfo.PropertyType.Name switch
             {
                 "String" => valueStr.Trim(),
                 "Int32" => int.TryParse(valueStr, out var intValue) ? intValue : 0,
-                "Single"=> float.TryParse(valueStr, out var floatValue) ? floatValue : 0,
+                "Single" => float.TryParse(valueStr, out var floatValue) ? floatValue : 0,
                 _ => throw new ArgumentOutOfRangeException()
             };
             propertyInfo.SetValue(rcfFile, value);

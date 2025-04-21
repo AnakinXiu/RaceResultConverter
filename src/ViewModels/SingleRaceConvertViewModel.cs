@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 using RaceResultConverter.Conversion;
+using RaceResultConverter.DTO;
 using RaceResultConverter.Enum;
 using RaceResultConverter.Utils;
 using OpenFileDialog = Microsoft.Win32.OpenFileDialog;

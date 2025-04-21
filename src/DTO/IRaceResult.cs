@@ -1,4 +1,4 @@
-﻿namespace RaceResultConverter;
+﻿namespace RaceResultConverter.DTO;
 
 public interface IRaceResult
 {
