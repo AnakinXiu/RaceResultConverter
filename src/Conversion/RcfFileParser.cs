@@ -8,20 +8,42 @@ using RaceResultConverter.DTO.ZRound;
 
 namespace RaceResultConverter.Conversion;
 
+public class RcfFileParseResult
+{
+    public static RcfFileParseResult Failed(string errorMessage)
+        => new RcfFileParseResult { IsValid = false, ErrorMessage = errorMessage };
+
+    public static RcfFileParseResult Success(ZRoundResult result)
+        => new RcfFileParseResult { IsValid = true, ZRoundResult = result };
+
+    private RcfFileParseResult()
+    {
+    }
+
+    public bool IsValid { get; private set; }
+
+    public string ErrorMessage { get; private set; } = string.Empty;
+
+    public ZRoundResult ZRoundResult { get; private set; }
+}
+
 public static class RcfFileParser
 {
     private static string Extension => ".rcf";
 
-    public static ZRoundResult ParseZRoundResult(string rcfFilePath)
+    public static RcfFileParseResult ParseZRoundResult(string rcfFilePath)
     {
-        if (!File.Exists(rcfFilePath) || !IsValidRcfFile(rcfFilePath))
-            return null;
+        if (!File.Exists(rcfFilePath))
+            return RcfFileParseResult.Failed("rcf file doesn't exist.");
+
+        if (!IsValidRcfFile(rcfFilePath))
+            return RcfFileParseResult.Failed("rcf file is invalid.");
 
         var rcfFile = ParseRcfFile(rcfFilePath);
         var jsonFilePath = GetJsonFilePath(rcfFilePath, rcfFile);
 
         if (!File.Exists(jsonFilePath))
-            return null;
+            return RcfFileParseResult.Failed($"Cannot find related json file: '{jsonFilePath}'.");
 
         var zRoundResult = ParseJsonFile(jsonFilePath);
 
@@ -29,7 +51,7 @@ public static class RcfFileParser
         zRoundResult.Description = rcfFile.Description;
         zRoundResult.Cars = rcfFile.Cars;
 
-        return zRoundResult;
+        return RcfFileParseResult.Success(zRoundResult);
     }
 
     private static RcfFile ParseRcfFile(string rcfFilePath)
