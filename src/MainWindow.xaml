@@ -4,73 +4,83 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:RaceResultConverter"
+        xmlns:viewModels="clr-namespace:RaceResultConverter.ViewModels"
+        xmlns:converters="clr-namespace:RaceResultConverter.Converters"
+        xmlns:enum="clr-namespace:RaceResultConverter.Enum"
+        xmlns:views="clr-namespace:RaceResultConverter.Views"
         mc:Ignorable="d"
         Title="Race Result Converter"
-        d:DataContext="{d:DesignInstance Type=local:MainWindowViewModel}"
-        Width="480" Height="180"
+        d:DataContext="{d:DesignInstance Type=viewModels:MainWindowViewModel}"
+        Width="480" Height="200"
         WindowStyle="SingleBorderWindow"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        SizeToContent="Height">
 
     <Window.Resources>
         <ResourceDictionary>
-            <local:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
+            <Style TargetType="RadioButton">
+                <Setter Property="Margin" Value="0 0 10 0" />
+                <Setter Property="VerticalContentAlignment" Value="Center" />
+            </Style>
+            <Style TargetType="StackPanel">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+            <converters:ConvertTypeToBoolConvert x:Key="ToBoolConvert"/>
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="General.xaml"/>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </Window.Resources>
 
-    <Grid Margin="10">
-        <Grid VerticalAlignment="Center">
+    <Grid >
+        <Grid VerticalAlignment="Stretch" Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="60"/>
-            </Grid.ColumnDefinitions>
 
-            <TextBlock Grid.Row="0" Grid.Column="0"
-                       Text="{x:Static local:Resource.ConvertType}"
+            <StackPanel Orientation="Horizontal" IsEnabled="False">
+                <TextBlock Text="{x:Static local:Resource.ConvertType}"
                        Style="{StaticResource General.TextBlock}"/>
-            <ToggleButton Grid.Row="0" Grid.Column="1" Grid.ColumnSpan="2"
-                          IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static local:ConvertType.ZRoundToZon}}">
-                <ToggleButton.Style>
-                    <Style BasedOn="{StaticResource General.ToggleButton}"
+                <ToggleButton IsChecked="{Binding Path=ConvertType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static enum:ConvertType.ZRoundToZon}}">
+                    <ToggleButton.Style>
+                        <Style BasedOn="{StaticResource General.ToggleButton}"
                            TargetType="ToggleButton">
-                        <Style.Triggers>
-                            <Trigger Property="IsChecked" Value="True">
-                                <Setter Property="Content" Value="{x:Static local:Resource.tbZonFormat}"/>
-                            </Trigger>
-                            <Trigger Property="IsChecked" Value="False">
-                                <Setter Property="Content" Value="{x:Static local:Resource.tbZRoundFormat}"/>
-                            </Trigger>
-                        </Style.Triggers>
-                    </Style>
-                </ToggleButton.Style>
-            </ToggleButton>
+                            <Style.Triggers>
+                                <Trigger Property="IsChecked" Value="True">
+                                    <Setter Property="Content" Value="{x:Static local:Resource.tbZonFormat}"/>
+                                </Trigger>
+                                <Trigger Property="IsChecked" Value="False">
+                                    <Setter Property="Content" Value="{x:Static local:Resource.tbZRoundFormat}"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </ToggleButton.Style>
+                </ToggleButton>
+            </StackPanel>
 
-            <TextBlock Grid.Row="1" Grid.Column="0"
-                       Text="{x:Static local:Resource.lbSelectFile}"
-                       Style="{StaticResource General.TextBlock}"/>
-            <TextBox Grid.Row="1" Grid.Column="1" Style="{StaticResource General.TextBox}"
-                     Text="{Binding SelectedFilePath}"
-                     IsReadOnly="True"/>
+            <StackPanel Grid.Row="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <TextBlock Text="{x:Static local:Resource.lbSelectSourceType}"
+                           Style="{StaticResource General.TextBlock}"/>
+                <RadioButton Content="Single Race" 
+                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static enum:ConvertSourceType.Single}}"/>
+                <RadioButton Content="Championship" 
+                             IsChecked="{Binding ConvertSourceType, Converter={StaticResource ToBoolConvert}, ConverterParameter={x:Static enum:ConvertSourceType.Championship}}"/>
+            </StackPanel>
 
-            <Button Grid.Row="1" Grid.Column="2" Content="{x:Static local:Resource.btnSelectFile}"
-                    Command="{Binding Path=SelectFileCommand }"
-                    Style="{StaticResource General.Button}"/>
+            <StackPanel Grid.Row="2" >
+                <views:SingleRaceConvertPage Visibility="{Binding DataContext.IsSingleConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                             DataContext="{Binding Path=SingleRaceConvertViewModel}"/>
+                <views:ChampionshipResultConvertPage Visibility="{Binding DataContext.IsChampionshipConvert, Converter={StaticResource BooleanToVisibilityConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType=Window}}"
+                                                     DataContext="{Binding Path=ChampionshipResultConvertViewModel}"/>
+            </StackPanel>
 
-            <Button Grid.Row="2" Grid.Column="2" Content="{x:Static local:Resource.btnConvert}"
-                    Command="{Binding Path=ConvertCommand }"
-                    Style="{StaticResource General.Button}"/>
-
-            <TextBlock Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="3" Text="{Binding ConvertMessage, UpdateSourceTrigger=PropertyChanged}"
-                       Background="Transparent">
+            <TextBlock Grid.Row="4" Text="{Binding ConvertMessage, UpdateSourceTrigger=PropertyChanged}"
+                   Background="Transparent">
                 <TextBlock.Style>
                     <Style TargetType="TextBlock">
                         <Style.Triggers>

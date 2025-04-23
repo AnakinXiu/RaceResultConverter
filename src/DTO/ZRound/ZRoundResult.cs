@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.DTO.ZRound;
 
 [JsonObject(MemberSerialization.OptIn)]
 public class ZRoundResult : IRaceResult
@@ -22,7 +22,7 @@ public class ZRoundResult : IRaceResult
 
     public float MinLapTime { get; set; }
 
-    public float  TimeToFinish { get; set; }
+    public float TimeToFinish { get; set; }
 
     [JsonProperty("name")] 
     public string Name { get; set; } = string.Empty;
@@ -44,6 +44,9 @@ public class ZRoundResult : IRaceResult
 
     [JsonProperty("classification")]
     public Classification[] Classification { get; set; }
+
+    [JsonIgnore]
+    public List<Car> Cars { get; set; } = new();
 }
 
 [JsonObject(MemberSerialization.OptIn)]

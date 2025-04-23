@@ -79,6 +79,15 @@ namespace RaceResultConverter {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Select Folder.
+        /// </summary>
+        public static string btnSelectFolder {
+            get {
+                return ResourceManager.GetString("btnSelectFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancelled..
         /// </summary>
         public static string ConvertResult_Cancelled {
@@ -120,6 +129,15 @@ namespace RaceResultConverter {
         public static string lbSelectFile {
             get {
                 return ResourceManager.GetString("lbSelectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data Source Type.
+        /// </summary>
+        public static string lbSelectSourceType {
+            get {
+                return ResourceManager.GetString("lbSelectSourceType", resourceCulture);
             }
         }
         

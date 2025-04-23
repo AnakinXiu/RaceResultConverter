@@ -1,7 +1,8 @@
 ﻿using System.Globalization;
 using System.Windows.Data;
+using RaceResultConverter.Enum;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.Converters;
 
 public class ConvertTypeToBoolConvert : IValueConverter
 {

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.Utils;
 
 public class RelayCommand : ICommand
 {

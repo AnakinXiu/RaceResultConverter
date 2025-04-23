@@ -1,0 +1,7 @@
+
+[*]
+
+# ReSharper properties
+resharper_align_multiline_calls_chain = true
+resharper_align_multiline_extends_list = true
+resharper_align_multiline_parameter = true

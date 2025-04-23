@@ -1,4 +1,4 @@
-﻿namespace RaceResultConverter;
+﻿namespace RaceResultConverter.Enum;
 
 public enum ConvertType
 {

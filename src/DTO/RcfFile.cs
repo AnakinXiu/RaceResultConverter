@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace RaceResultConverter;
+namespace RaceResultConverter.DTO;
 
 public class RcfFile
 {
