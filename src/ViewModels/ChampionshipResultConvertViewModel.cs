@@ -79,8 +79,8 @@ public class ChampionshipResultConvertViewModel : INotifyPropertyChanged
         var zonResults = ZRoundRaceResultItems.Where(result => result is { IsCheck: true, ParseResult.IsValid: true })
                                               .Select(result => converter.ConvertToTarget(result.ParseResult.ZRoundResult));
 
-        var convertResult = zonResults.Aggregate(true, 
-            (current, zonResult) => current & JsonUtil.SaveAsJson(zonResult, Path.ChangeExtension(Path.Combine(ChampionshipFolderPath, zonResult.Name), "json")));
+        var convertResult = zonResults.Aggregate(true,
+            (current, zonResult) => current & JsonUtil.SaveAsJson(zonResult, Path.Combine(ChampionshipFolderPath, zonResult.Name) + ".json"));
 
         _setConvertResult(convertResult, convertResult ? Resource.ConvertResult_Succeed : Resource.ConvertResult_Failed);
     }
